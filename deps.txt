@@ -1,5 +1,6 @@
 Package            Version
 ------------------ ---------
+art                5.7
 certifi            2022.6.15
 charset-normalizer 2.1.0
 climage            0.1.3
