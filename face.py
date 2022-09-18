@@ -10,7 +10,8 @@ def clear():
 
 while(True):
     termage = climage.convert('spiderlily.png')
-    print(termage)
+    print("hey", "qt")
+    print("break"+ termage)
     time.sleep(1)
     clear()
     time.sleep(1)
