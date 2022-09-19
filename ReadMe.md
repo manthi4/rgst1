@@ -1,5 +1,8 @@
 ReadMe.md
 # An interface to present output from other projects in a personable way.
+## Version control stuff
+*  to download required python packages run ```pip install -r reqs.txt```
+*  to create reqs.txt run ```pip freeze > reqs.txt```
 ## Libraries of interest
 *   https://betterprogramming.pub/5-python-libraries-for-better-console-output-b2494b587855
 *   climage

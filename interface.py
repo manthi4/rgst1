@@ -1,4 +1,3 @@
-print("initing")
 import os
 from ossaudiodev import SOUND_MIXER_ALTPCM
 from textwrap import wrap
@@ -11,14 +10,33 @@ import sys
 from art import *
 
 
+##assets
+blank_face=\
+    "        ____________            ____________        \n"+\
+    "       /            \          /            \       \n"+\
+    "      |      /\      |        |      /\      |      \n"+\
+    "      |     /[]\     |        |     /[]\     |      \n"+\
+    "      |     \__/     |        |     \__/     |      \n"+\
+    "       \____________/          \____________/       \n"+\
+    "                         /\                         \n"+\
+    "                        /  \                        \n"
+
+f_hello_world = text2art("hellow World!")
+f_hi = text2art("UwU")
+
+def get_ftext_size(fancy_text):
+    w = fancy_text.index("\n")+1
+    h = sum([c=="\n" for c in fancy_text])+1
+    return w, h
+
 def main(mainwin):
     # f = open("some.txt", "r+")
     # st = f.read()
     # f.close()
-    curcols, curlines = stdscr.getmaxyx()
-    hewo = text2art("hello!")
-    hewo_w = 30
-    hewo_h = 7
+    # termage = climage.convert('spiderlily.png', is_unicode=False)
+
+    update_flag= False
+
     def draw_mainwin(mainwin):
         mainwin.clear()
         mainwin.border('|','|', '-','-', '+', 'O', '+', '4')
@@ -26,41 +44,40 @@ def main(mainwin):
         mainwin.addstr(printyloc, 2, "Cols: " +  str(curcols)) # loc = (y, x) y = cols down , x = lines right
         mainwin.addstr(printyloc+1, 2, "Lines: " +  str(curlines))
 
-    def create_winny():
-        begin_x = int(curlines/2 - hewo_w/2)
-        begin_y = int(curcols/2 - hewo_h/2)
-        height = hewo_h
-        width = hewo_w #try not use fixed widths
-        termage = climage.convert('spiderlily.png', is_unicode=False)
-        winny = curses.newwin(height, width, begin_y, begin_x)
+    def create_bl_window():
+        begin_x, begin_y = 1, int(curcols/2)
+        bl_win = curses.newwin(int(curcols/2)-1, int(curlines/2), begin_y, begin_x)
+        bl_win.border('|','|', '-','-', '+', 'O', '+', '4')
+        bl_win.getbegyx()
+        return bl_win
+
+    def get_center_xy(obj_h, obj_w, win):
+        begy, begx = win.getbegyx()
+        curcols, curlines = win.getmaxyx()
+        return begy + int(curcols/2 - obj_h/2), begx+int(curlines/2 - obj_w/2)
+
+    def draw_fancy_text(ftext, begin_x=1, begin_y =1, center=False, parent =stdscr):
+        w, h = get_ftext_size(ftext)
+        if center:
+            begin_y, begin_x = get_center_xy(h, w, parent)
+        winny = curses.newwin(h, w, begin_y, begin_x)
+        winny.addstr(ftext)
         return winny
         
-    def draw_winny(winny):
-        winny.clear()
-        winny.border('x','x', 'x','x', 'O', 'O', 'O', 'O')
-        winny.addstr(hewo)
-        # winny.addstr(termage)
-        # winny.refresh()
-
-    
-    winny = create_winny()
     while(True):
-        # mainwin.clear()
-        # if curlines != str(curses.LINES) or currcols != str(curses.COLS):
-        #     printyloc += 2
-        #     currcols = str(curses.COLS)
-        #     curlines = str(curses.LINES)
-        #     mainwin.addstr(printyloc, 2, "Cols: " +  currcols) # loc = (y, x) y = cols down , x = lines right
-        #     mainwin.addstr(printyloc+1, 2, "Lines: " +  curlines)
         curcols, curlines = stdscr.getmaxyx()
         time.sleep(1)
         draw_mainwin(mainwin)
-        draw_winny(winny)
+        #should I be deleting old winnys as new ones are created?
+        # winny = draw_fancy_text(blank_face, center = True)
+        bl_win = create_bl_window()
+        blwinny = draw_fancy_text(f_hi, center=True, parent=bl_win)
         mainwin.refresh()
-        winny.refresh()
+        bl_win.refresh()
+        blwinny.refresh()
+        # winny.refresh()
 
-
-
+    
 
 
 
