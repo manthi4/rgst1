@@ -9,3 +9,4 @@ Pillow==9.2.0
 requests==2.28.1
 urllib3==1.26.12
 x256==0.0.3
+psutil
