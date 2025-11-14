@@ -6,21 +6,13 @@ import asyncio
 import logging
 
 
-def draw_fancy_text(ftext, parent, begin_x=1, begin_y =1, center=True):
-    '''required for fancyText, draws the fancy text at specified coords or centers on parent'''
+
+def get_center_ftext(ftext: str, win: curses.window):
     w = ftext.index("\n")+1
     h = sum([c=="\n" for c in ftext])+1
-    if center:
-        begin_y, begin_x = get_center_xy(h, w, parent)
-    winny = curses.newwin(h, w, begin_y, begin_x)
-    winny.addstr(ftext)
-    return winny
-
-def get_center_xy(obj_h, obj_w, win):
-    '''Takes in an objects h,w, and parent window, returns global start coords of object to center it'''
     begy, begx = win.getbegyx()
     curcols, curlines = win.getmaxyx()
-    return begy + int(curcols/2 - obj_h/2), begx+int(curlines/2 - obj_w/2)
+    return begy + int(curcols/2 - h/2), begx+int(curlines/2 - w/2)
 
 @dataclass
 class WindowConfig:
@@ -124,10 +116,21 @@ def create_window(parent_win: curses.window, windowConfig: WindowConfig, weight_
     new_win.border('|','|', '-','-', '*', '*', '*', '*')
     return new_win
 
-async def basic_update_function(window: AsyncWindow):
+async def basic_update_function(win: AsyncWindow):
     try:
         while True:
-            await asyncio.sleep(1)
+            logging.debug(f"Updating window {win.name}")
+            await asyncio.sleep(3)
     except asyncio.CancelledError:
         logging.info("Update task cancelled.")
         return
+    
+# def draw_fancy_text(ftext, parent: AsyncWindow, begin_x: int=1, begin_y:int =1, center:bool=True) -> curses.window:
+#     '''required for fancyText, draws the fancy text at specified coords or centers on parent'''
+#     w = ftext.index("\n")+1
+#     h = sum([c=="\n" for c in ftext])+1
+#     if center:
+#         begin_y, begin_x = get_center_xy(h, w, parent)
+#     winny = curses.newwin(h, w, begin_y, begin_x)
+#     winny.addstr(ftext)
+#     return winny

@@ -9,12 +9,14 @@ import os
 import asyncio
 
 
-# async def update_time_window(win):
-#     while True:
-#         f_time = get_f_time()
-#         draw_fancy_text(f_time, center=True, parent=win)
-#         win.refresh()
-#         await asyncio.sleep(0)
+async def update_time_window(win: AsyncWindow):
+    while True:
+        logging.debug(f"Updating window {win.name}")
+        f_time = get_f_time()
+        y, x = get_center_ftext(f_time, win.curses_window)
+        win.curses_window.addstr(y, x, f_time)
+        win.refresh_window()
+        await asyncio.sleep(1)
 
 async def add_system_details_to_window(asyncWin: AsyncWindow):
     try:
@@ -55,7 +57,7 @@ async def core_ui(mainwin):
     t_win = AsyncWindow("top win", WindowConfig(margin=1), update_function=basic_update_function, children_direction=Direction.VERTICAL)
     b_win = AsyncWindow("bottom_win", WindowConfig(margin=1), update_function=basic_update_function, children_direction=Direction.HORIZONTAL)
     bl_win = AsyncWindow("bl_win", WindowConfig(relative_size = 4, margin=1), update_function=basic_update_function, children_direction=Direction.HORIZONTAL)
-    br_win = AsyncWindow("br_win", WindowConfig(relative_size = 6, margin=1), update_function=basic_update_function, children_direction=Direction.HORIZONTAL)
+    br_win = AsyncWindow("br_win", WindowConfig(relative_size = 6, margin=1), update_function=update_time_window, children_direction=Direction.HORIZONTAL)
 
     base_win.children = [t_win, b_win]
     b_win.children = [bl_win, br_win]
